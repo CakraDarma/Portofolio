@@ -7,7 +7,6 @@ export default function Cursor() {
 	const svg = useRef(null);
 
 	useEffect(() => {
-		// TODO Learn useContext and useRef here
 		const images = document.querySelectorAll('.img');
 
 		const tl = gsap.timeline({ paused: true });
