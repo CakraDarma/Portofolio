@@ -10,6 +10,7 @@ export default function About() {
 	const heading = useRef(null);
 	const body = useRef(null);
 
+	// memunculkan heading dan bodynya
 	useEffect(() => {
 		ScrollTrigger.create({
 			trigger: aboutSection.current,
@@ -24,7 +25,7 @@ export default function About() {
 				.to(
 					body.current,
 					{ opacity: 1, y: 0, ease: 'power4.out', duration: 1.25 },
-					0.2
+					0.5
 				),
 
 			toggleActions: 'play none none none',
