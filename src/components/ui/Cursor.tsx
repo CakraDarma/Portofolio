@@ -13,6 +13,7 @@ export default function Cursor() {
 		const tl = gsap.timeline({ paused: true });
 
 		tl.to(curs.current, {
+			// make bigger cursor and svg
 			height: '112px',
 			width: '112px',
 			ease: 'expo.inout',
@@ -24,6 +25,7 @@ export default function Cursor() {
 			});
 
 			img.addEventListener('mouseleave', function () {
+				//  make cursor back to small
 				tl.reverse();
 				tl.eventCallback('onReverseComplete', function () {
 					gsap.set(svg.current, { opacity: 0 }); // Hide the SVG element
@@ -36,7 +38,7 @@ export default function Cursor() {
 			setCursor({ x: e.clientX, y: e.clientY });
 		}
 		document.addEventListener('mousemove', moveCursor);
-
+		// idk
 		return () => {
 			document.removeEventListener('mousemove', moveCursor);
 		};
