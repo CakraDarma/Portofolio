@@ -49,7 +49,7 @@ const App = () => {
 
 	return (
 		<div className='bg-secondary-100'>
-			<NavBar sectionRefs={sectionRefs.current} />{' '}
+			{/* <NavBar sectionRefs={sectionRefs.current} />{' '} */}
 			{/* passing sectionRefs props to give access to Navbar, Navbar can then access the props which have access to the array of sectionRef and loop over it */}
 			<Hero />
 			<main className='px-5 md:px-10 xl:px-20 2xl:px-28'>

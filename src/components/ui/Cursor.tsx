@@ -1,73 +1,62 @@
 import { useEffect, useState, useRef } from 'react';
-import { gsap } from 'gsap';
+import { motion, useMotionValue, useSpring, Variants } from 'framer-motion';
 
 export default function Cursor() {
 	const [cursor, setCursor] = useState({ x: 0, y: 0 });
 	const curs = useRef(null);
-	const svg = useRef(null);
 
+	const cursorSize = 15;
+	const smoothOptions = { damping: 20, stiffness: 300, mass: 0.5 };
+
+	const mouse = {
+		x: useMotionValue(0),
+		y: useMotionValue(0),
+	};
+
+	const smoothMouse = {
+		x: useSpring(mouse.x, smoothOptions),
+
+		y: useSpring(mouse.y, smoothOptions),
+	};
+
+	const manageMouseMove = (e: MouseEvent) => {
+		const { clientX, clientY } = e;
+		// console.log(e);
+		// mouse.x.set(clientX);
+		// mouse.y.set(clientY);
+
+		mouse.x.set(clientX - cursorSize / 2);
+		mouse.y.set(clientY - cursorSize / 2);
+	};
+
+	console.log(mouse);
 	useEffect(() => {
-		const images = document.querySelectorAll('.img');
-
-		const tl = gsap.timeline({ paused: true });
-
-		tl.to(curs.current, {
-			// make bigger cursor and svg
-			height: '112px',
-			width: '112px',
-			ease: 'expo.inout',
-		}).to(svg.current, { opacity: 1, width: '96px', height: '96px' }, 0);
-
-		images.forEach((img) => {
-			img.addEventListener('mouseenter', function () {
-				tl.play();
-			});
-
-			img.addEventListener('mouseleave', function () {
-				//  make cursor back to small
-				tl.reverse();
-				tl.eventCallback('onReverseComplete', function () {
-					gsap.set(svg.current, { opacity: 0 }); // Hide the SVG element
-					gsap.set(curs.current, { height: '12px', width: '12px' }); // Hide the SVG element
-				});
-			});
-		});
-
-		function moveCursor(e: { clientX: number; clientY: number }) {
-			setCursor({ x: e.clientX, y: e.clientY });
-		}
-		document.addEventListener('mousemove', moveCursor);
-		// idk
+		document.addEventListener('mousemove', manageMouseMove);
 		return () => {
-			document.removeEventListener('mousemove', moveCursor);
+			document.removeEventListener('mousemove', manageMouseMove);
 		};
 	}, []);
 
-	const { x, y } = cursor;
-
 	return (
-		<div
+		<motion.div
 			ref={curs}
-			className='cursor pointer-events-none fixed left-1/2 top-1/2 z-[999] hidden h-3 w-3 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-secondary-600 sm:flex'
-			style={{ left: `${x}px`, top: `${y}px` }}
+			className='cursor pointer-events-none fixed left-1/2 top-1/2 z-[999] hidden h-32 w-32 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-secondary-600 sm:flex'
+			// style={{ left: `${mouse.x}px`, top: `${mouse.y}px` }}
+			style={{
+				left: smoothMouse.x,
+
+				top: smoothMouse.y,
+			}}
 		>
 			<svg
-				ref={svg}
+				width='100'
+				height='100'
+				viewBox='0 0 100 100'
+				fill='none'
 				xmlns='http://www.w3.org/2000/svg'
-				className='scale-50 opacity-0'
-				width='24'
-				height='24'
-				viewBox='0 0 24 24'
 			>
-				<path
-					fill='none'
-					stroke='currentColor'
-					strokeLinecap='round'
-					strokeLinejoin='round'
-					strokeWidth='1.5'
-					d='M6 19L19 6m0 0v12.48M19 6H6.52'
-				/>
+				<circle cx='50' cy='50' r='50' fill='black' />
 			</svg>
-		</div>
+		</motion.div>
 	);
 }
